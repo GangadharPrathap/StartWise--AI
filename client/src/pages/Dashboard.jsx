@@ -1,23 +1,23 @@
 import { motion } from 'framer-motion'
-import { 
-  TrendingUp, 
-  Users, 
-  Target, 
-  Zap, 
-  BrainCircuit, 
-  ChevronRight, 
-  Activity, 
+import {
+  TrendingUp,
+  Users,
+  Target,
+  Zap,
+  BrainCircuit,
+  ChevronRight,
+  Activity,
   Award,
   ArrowUpRight,
   ShieldCheck
 } from 'lucide-react'
-import { 
-  AreaChart, 
-  Area, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
   ResponsiveContainer
 } from 'recharts'
 import { Card, Badge, Button } from '../components/ui/index.jsx'
@@ -44,7 +44,7 @@ export default function Dashboard() {
   const { history, meetings } = useAppStore()
 
   return (
-    <motion.div 
+    <motion.div
       variants={pageVariants}
       initial="initial"
       animate="animate"
@@ -95,48 +95,48 @@ export default function Dashboard() {
         <motion.div variants={childVariants} className="lg:col-span-2">
           <Card className="p-8 h-full">
             <div className="flex items-center justify-between mb-8">
-               <h3 className="text-sm font-black text-white uppercase tracking-widest flex items-center gap-2">
-                 <TrendingUp size={16} className="text-accent" /> Traction Projection
-               </h3>
-               <div className="flex gap-2">
-                  <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-                  <span className="text-[10px] text-gray-500 font-bold uppercase">Real-time</span>
-               </div>
+              <h3 className="text-sm font-black text-white uppercase tracking-widest flex items-center gap-2">
+                <TrendingUp size={16} className="text-accent" /> Traction Projection
+              </h3>
+              <div className="flex gap-2">
+                <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+                <span className="text-[10px] text-gray-500 font-bold uppercase">Real-time</span>
+              </div>
             </div>
             <div className="h-[300px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" aspect={2}>
                 <AreaChart data={mockChartData}>
                   <defs>
                     <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                  <XAxis 
-                    dataKey="name" 
-                    stroke="rgba(255,255,255,0.2)" 
-                    fontSize={10} 
-                    tickLine={false} 
+                  <XAxis
+                    dataKey="name"
+                    stroke="rgba(255,255,255,0.2)"
+                    fontSize={10}
+                    tickLine={false}
                     axisLine={false}
                   />
-                  <YAxis 
-                    stroke="rgba(255,255,255,0.2)" 
-                    fontSize={10} 
-                    tickLine={false} 
+                  <YAxis
+                    stroke="rgba(255,255,255,0.2)"
+                    fontSize={10}
+                    tickLine={false}
                     axisLine={false}
                   />
-                  <Tooltip 
+                  <Tooltip
                     contentStyle={{ background: '#0A0A0A', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', fontSize: '10px' }}
                     itemStyle={{ color: '#fff' }}
                   />
-                  <Area 
-                    type="monotone" 
-                    dataKey="value" 
-                    stroke="#3b82f6" 
+                  <Area
+                    type="monotone"
+                    dataKey="value"
+                    stroke="#3b82f6"
                     strokeWidth={3}
-                    fillOpacity={1} 
-                    fill="url(#colorValue)" 
+                    fillOpacity={1}
+                    fill="url(#colorValue)"
                   />
                 </AreaChart>
               </ResponsiveContainer>
@@ -151,32 +151,32 @@ export default function Dashboard() {
               <ShieldCheck size={16} className="text-accent" /> Investor Audit
             </h3>
             <div className="space-y-6">
-               {scoreData.map((item, i) => (
-                 <div key={i}>
-                    <div className="flex justify-between items-center mb-2">
-                       <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">{item.name}</span>
-                       <span className="text-xs font-black text-white">{item.value}%</span>
-                    </div>
-                    <div className="h-1.5 bg-white/5 rounded-full overflow-hidden p-[1px] border border-white/5">
-                       <motion.div 
-                        initial={{ width: 0 }}
-                        animate={{ width: `${item.value}%` }}
-                        transition={{ duration: 1, delay: i * 0.1 }}
-                        className="h-full rounded-full bg-accent shadow-[0_0_10px_rgba(59,130,246,0.3)]"
-                        style={{ backgroundColor: item.color }}
-                       />
-                    </div>
-                 </div>
-               ))}
+              {scoreData.map((item, i) => (
+                <div key={i}>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">{item.name}</span>
+                    <span className="text-xs font-black text-white">{item.value}%</span>
+                  </div>
+                  <div className="h-1.5 bg-white/5 rounded-full overflow-hidden p-[1px] border border-white/5">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${item.value}%` }}
+                      transition={{ duration: 1, delay: i * 0.1 }}
+                      className="h-full rounded-full bg-accent shadow-[0_0_10px_rgba(59,130,246,0.3)]"
+                      style={{ backgroundColor: item.color }}
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
-            
+
             <div className="mt-8 pt-8 border-t border-white/5">
-               <div className="flex gap-4 items-start bg-accent/5 p-4 rounded-2xl border border-accent/10">
-                  <Award className="text-accent shrink-0" size={18} />
-                  <p className="text-[10px] text-gray-400 leading-relaxed italic">
-                    "Your market validation is elite. Focus on tightening the team narrative before the next VC simulation."
-                  </p>
-               </div>
+              <div className="flex gap-4 items-start bg-accent/5 p-4 rounded-2xl border border-accent/10">
+                <Award className="text-accent shrink-0" size={18} />
+                <p className="text-[10px] text-gray-400 leading-relaxed italic">
+                  "Your market validation is elite. Focus on tightening the team narrative before the next VC simulation."
+                </p>
+              </div>
             </div>
           </Card>
         </motion.div>
@@ -184,45 +184,45 @@ export default function Dashboard() {
 
       {/* Bottom Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-         {/* AI Insight Feed */}
-         <motion.div variants={childVariants}>
-            <Card className="p-8">
-               <h3 className="text-sm font-black text-white uppercase tracking-widest mb-6">AI Insight Stream</h3>
-               <div className="space-y-4">
-                  {[
-                    "New investor detected in Delhi NCR market.",
-                    "Pitch deck alignment score improved by 15%.",
-                    "Competitor 'StartupX' updated their pricing model.",
-                  ].map((insight, i) => (
-                    <div key={i} className="flex gap-4 items-center p-4 bg-white/5 rounded-2xl border border-white/5 hover:border-white/10 transition-all group">
-                       <div className="w-2 h-2 rounded-full bg-accent group-hover:scale-150 transition-transform" />
-                       <p className="text-xs text-gray-400 font-medium">{insight}</p>
-                       <ChevronRight className="ml-auto text-gray-600" size={14} />
-                    </div>
-                  ))}
-               </div>
-            </Card>
-         </motion.div>
+        {/* AI Insight Feed */}
+        <motion.div variants={childVariants}>
+          <Card className="p-8">
+            <h3 className="text-sm font-black text-white uppercase tracking-widest mb-6">AI Insight Stream</h3>
+            <div className="space-y-4">
+              {[
+                "New investor detected in Delhi NCR market.",
+                "Pitch deck alignment score improved by 15%.",
+                "Competitor 'StartupX' updated their pricing model.",
+              ].map((insight, i) => (
+                <div key={i} className="flex gap-4 items-center p-4 bg-white/5 rounded-2xl border border-white/5 hover:border-white/10 transition-all group">
+                  <div className="w-2 h-2 rounded-full bg-accent group-hover:scale-150 transition-transform" />
+                  <p className="text-xs text-gray-400 font-medium">{insight}</p>
+                  <ChevronRight className="ml-auto text-gray-600" size={14} />
+                </div>
+              ))}
+            </div>
+          </Card>
+        </motion.div>
 
-         {/* Quick Actions */}
-         <motion.div variants={childVariants}>
-            <Card className="p-8">
-               <h3 className="text-sm font-black text-white uppercase tracking-widest mb-6">Execution Hub</h3>
-               <div className="grid grid-cols-2 gap-4">
-                  {[
-                    { label: 'New Analysis', icon: BrainCircuit, path: '/analyzer' },
-                    { label: 'VC Session', icon: Zap, path: '/simulator' },
-                    { label: 'Update Roadmap', icon: Activity, path: '/roadmap' },
-                    { label: 'Find Investors', icon: Users, path: '/investors' },
-                  ].map((action, i) => (
-                    <button key={i} onClick={() => window.location.href=action.path} className="p-6 bg-white/5 border border-white/5 rounded-[2rem] hover:bg-accent/10 hover:border-accent/30 transition-all group text-left">
-                       <action.icon className="text-gray-500 group-hover:text-accent mb-4 transition-colors" size={24} />
-                       <span className="block text-[10px] font-black text-gray-400 uppercase tracking-widest group-hover:text-white transition-colors">{action.label}</span>
-                    </button>
-                  ))}
-               </div>
-            </Card>
-         </motion.div>
+        {/* Quick Actions */}
+        <motion.div variants={childVariants}>
+          <Card className="p-8">
+            <h3 className="text-sm font-black text-white uppercase tracking-widest mb-6">Execution Hub</h3>
+            <div className="grid grid-cols-2 gap-4">
+              {[
+                { label: 'New Analysis', icon: BrainCircuit, path: '/analyzer' },
+                { label: 'VC Session', icon: Zap, path: '/simulator' },
+                { label: 'Update Roadmap', icon: Activity, path: '/roadmap' },
+                { label: 'Find Investors', icon: Users, path: '/investors' },
+              ].map((action, i) => (
+                <button key={i} onClick={() => window.location.href = action.path} className="p-6 bg-white/5 border border-white/5 rounded-[2rem] hover:bg-accent/10 hover:border-accent/30 transition-all group text-left">
+                  <action.icon className="text-gray-500 group-hover:text-accent mb-4 transition-colors" size={24} />
+                  <span className="block text-[10px] font-black text-gray-400 uppercase tracking-widest group-hover:text-white transition-colors">{action.label}</span>
+                </button>
+              ))}
+            </div>
+          </Card>
+        </motion.div>
       </div>
     </motion.div>
   )
