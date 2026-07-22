@@ -2,7 +2,7 @@
 
 StartWise AI is a premium AI-powered co-founder platform that helps first-time Indian founders transform startup ideas into investor-ready businesses through AI-driven market analysis, execution roadmaps, AI VC simulations, investor discovery, and intelligent startup guidance.
 
----
+    ---
 
 # 🌟 Overview
 
