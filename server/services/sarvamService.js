@@ -11,7 +11,10 @@ export const sarvamService = {
    * @param {string} model - 'saarika:v1' or similar
    */
   async speechToText(filePath, model = 'saarika:v1') {
-    if (!SARVAM_API_KEY) throw new Error("SARVAM_API_KEY is not configured");
+    if (!SARVAM_API_KEY) {
+      console.warn("SARVAM_API_KEY is not configured. Returning null.");
+      return null;
+    }
 
     const formData = new FormData();
     formData.append('file', new Blob([fs.readFileSync(filePath)]), 'audio.wav');
@@ -41,7 +44,9 @@ export const sarvamService = {
    * @param {string} speaker - Speaker persona
    */
   async textToSpeech(text, targetLanguage = 'en-IN', speaker = 'meera') {
-    if (!SARVAM_API_KEY) throw new Error("SARVAM_API_KEY is not configured");
+    if (!SARVAM_API_KEY) {
+      return { audioContent: null, provider: 'none', message: 'SARVAM_API_KEY is not configured. Using browser TTS fallback.' };
+    }
 
     const response = await fetch('https://api.sarvam.ai/v1/text-to-speech', {
       method: 'POST',

@@ -1,6 +1,7 @@
 /**
  * Production-grade API Client for StartWise AI
  */
+import { auth } from '../services/firebase';
 
 const BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
@@ -15,6 +16,17 @@ class ApiClient {
       'Content-Type': 'application/json',
       ...options.headers,
     };
+
+    // Attach Firebase auth token if user is logged in
+    try {
+      if (auth?.currentUser) {
+        const token = await auth.currentUser.getIdToken();
+        headers['Authorization'] = `Bearer ${token}`;
+        headers['x-firebase-uid'] = auth.currentUser.uid;
+      }
+    } catch (err) {
+      console.warn('Could not get auth token:', err.message);
+    }
 
     const config = {
       ...options,

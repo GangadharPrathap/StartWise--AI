@@ -18,6 +18,7 @@ export const useAppStore = create((set) => ({
   // --- Core Domain State ---
   idea: '',
   selectedCity: 'Delhi NCR',
+  selectedSkills: [],
   result: null,
   history: [],
   meetings: [],
@@ -28,6 +29,7 @@ export const useAppStore = create((set) => ({
   setLoading: (isLoading) => set({ isLoading }),
   setIdea: (idea) => set({ idea }),
   setSelectedCity: (selectedCity) => set({ selectedCity }),
+  setSelectedSkills: (selectedSkills) => set({ selectedSkills }),
   setResult: (result) => set({ result }),
   setHistory: (history) => set({ history }),
   setMeetings: (meetings) => set({ meetings }),

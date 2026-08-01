@@ -1,6 +1,8 @@
 // Service for identifying potential investors
 
-import investors from "../data/investors.json" assert { type: "json" };
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const investors = require("../data/investors.json");
 
 // Get all investors
 export async function getInvestors() {

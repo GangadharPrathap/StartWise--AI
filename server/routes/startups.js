@@ -4,6 +4,12 @@ import { prisma } from "../lib/prisma.js";
 const router = express.Router();
 
 router.post("/", async (req, res) => {
+    if (!prisma) {
+        return res.status(503).json({
+            error: "Database not available. Set DATABASE_URL in .env to enable this feature."
+        });
+    }
+
     try {
         const {
             firebaseUid,
@@ -51,6 +57,12 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/:firebaseUid", async (req, res) => {
+    if (!prisma) {
+        return res.status(503).json({
+            error: "Database not available. Set DATABASE_URL in .env to enable this feature."
+        });
+    }
+
     try {
         const user = await prisma.user.findUnique({
             where: {

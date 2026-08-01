@@ -13,23 +13,37 @@ const SLIDE_ICONS = {
   Solution: Zap,
   Market: Users,
   'Business Model': DollarSign,
+  Revenue: DollarSign,
   Team: Users,
+  Traction: Zap,
+  Ask: DollarSign,
 }
 
 export default function PitchDeck() {
-  const { result } = useAppStore()
+  const { result, idea } = useAppStore()
   const [slides, setSlides] = useState(null)
   const [isGenerating, setIsGenerating] = useState(false)
 
   const generateDeck = async () => {
-    if (!result) {
+    const ideaText = idea || 'Startup idea'
+    if (!result && !idea) {
       toast.error('Please analyze an idea first to generate your pitch deck.')
       return
     }
     setIsGenerating(true)
     try {
-      const response = await apiClient.post('/generate-slides', { result })
-      setSlides(response.data.slides || response.data)
+      // Use /pitch-deck endpoint which supports AI generation with template fallback
+      const response = await apiClient.post('/pitch-deck', {
+        idea: ideaText,
+        slideCount: 8,
+        theme: 'Startup',
+        language: 'English',
+        type: 'investor'
+      })
+      // Handle both response formats: { slides: [...] } and { pitchSlides: [...] }
+      const data = response.data || response
+      const slideData = data.slides || data.pitchSlides || []
+      setSlides(slideData)
       toast.success('Pitch deck generated!')
     } catch (err) {
       console.error(err)
@@ -64,7 +78,7 @@ export default function PitchDeck() {
         <div className="flex items-center justify-center min-h-[400px]">
           <AILoader text="Building Your Pitch Deck..." subtext="Crafting narratives investors love" />
         </div>
-      ) : slides ? (
+      ) : slides && slides.length > 0 ? (
         <motion.div variants={childVariants} className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {slides.map((slide, i) => {
             const Icon = SLIDE_ICONS[slide.title] || FileText
@@ -76,11 +90,17 @@ export default function PitchDeck() {
                       <Icon className="text-accent" size={20} />
                     </div>
                     <div>
-                      <p className="text-[10px] text-gray-500 font-black uppercase tracking-[0.3em] mb-1">Slide {i + 1}</p>
+                      <p className="text-[10px] text-gray-500 font-black uppercase tracking-[0.3em] mb-1">Slide {slide.slideNumber || i + 1}</p>
                       <h3 className="text-white font-black text-lg">{slide.title}</h3>
                     </div>
                   </div>
                   <p className="text-gray-400 text-sm leading-relaxed">{slide.content}</p>
+                  {slide.speakerNotes && (
+                    <div className="mt-4 p-3 bg-white/5 rounded-xl border border-white/5">
+                      <p className="text-[10px] text-gray-600 font-bold uppercase tracking-widest mb-1">Speaker Notes</p>
+                      <p className="text-xs text-gray-500 leading-relaxed">{slide.speakerNotes}</p>
+                    </div>
+                  )}
                   {slide.bullets && (
                     <ul className="mt-4 space-y-2">
                       {slide.bullets.map((b, j) => (
@@ -104,8 +124,8 @@ export default function PitchDeck() {
             <p className="text-gray-500 text-sm max-w-xs mx-auto mb-8">
               Analyze your startup idea first, then generate a professional pitch deck in seconds.
             </p>
-            <Button icon={Sparkles} onClick={generateDeck} disabled={!result}>
-              {result ? 'Generate Pitch Deck' : 'Analyze an Idea First'}
+            <Button icon={Sparkles} onClick={generateDeck} disabled={!result && !idea}>
+              {result || idea ? 'Generate Pitch Deck' : 'Analyze an Idea First'}
             </Button>
           </Card>
         </motion.div>

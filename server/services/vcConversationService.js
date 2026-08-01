@@ -48,11 +48,32 @@ export const vcConversationService = {
       return parsed;
     } catch (error) {
       console.error("VC Chat Error:", error);
+      // Dynamic fallback based on message content
+      const msg = message.toLowerCase();
+      const fallbacks = [
+        { keywords: ['market', 'tam', 'size', 'opportunity'], response: "Interesting. But what's your actual serviceable market? TAM means nothing if you can't reach those customers. How do you plan to acquire your first 1,000 users?", tone: "Skeptical" },
+        { keywords: ['revenue', 'money', 'pricing', 'monetize', 'business model'], response: "Walk me through your unit economics. What's your CAC, LTV, and payback period? I need real numbers, not projections.", tone: "Analytical" },
+        { keywords: ['team', 'founder', 'cofounder', 'experience'], response: "Why are YOU the right person to build this? What unfair advantage does your team have that a well-funded competitor couldn't replicate?", tone: "Direct" },
+        { keywords: ['tech', 'ai', 'machine learning', 'algorithm', 'platform'], response: "Technology is a means, not an end. What specific problem does your tech solve that couldn't be done with a spreadsheet? Show me the 10x improvement.", tone: "Skeptical" },
+        { keywords: ['traction', 'users', 'growth', 'customers'], response: "Numbers are encouraging, but what's your retention look like? Show me the cohort data. High signups with low retention is a leaky bucket.", tone: "Analytical" },
+        { keywords: ['compete', 'different', 'unique', 'moat'], response: "Every founder says they're unique. But what happens when a big player copies your exact feature set with 100x your budget? What's truly defensible here?", tone: "Critical" },
+        { keywords: ['fund', 'invest', 'raise', 'capital', 'seed'], response: "Before we talk money — show me the milestones. What exactly will you accomplish with this round, and how does it de-risk the next round?", tone: "Direct" },
+      ];
+
+      const matched = fallbacks.find(f => f.keywords.some(k => msg.includes(k)));
+      const fallback = matched || { 
+        response: `That's an interesting point. But let me push back — what's the one thing that could kill this company in the next 12 months, and what's your plan to prevent it?`,
+        tone: "Skeptical"
+      };
+
+      const turnCount = history.filter(h => h.role === 'user').length;
+      const confidence = Math.min(30 + turnCount * 8, 75);
+
       return {
-        response: "I'm not sure I follow. Can you be more specific about your distribution channel?",
-        tone: "Skeptical",
-        confidence: 40,
-        metrics: { market: 5, product: 5, team: 5 }
+        response: fallback.response,
+        tone: fallback.tone,
+        confidence,
+        metrics: { market: 5 + Math.floor(Math.random() * 3), product: 5 + Math.floor(Math.random() * 3), team: 5 + Math.floor(Math.random() * 3) }
       };
     }
   }

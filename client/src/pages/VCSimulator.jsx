@@ -55,7 +55,8 @@ export default function VCSimulator() {
     handleTTS,
     evaluatePitch,
     startRecording,
-    stopRecording
+    stopRecording,
+    stopTTS
   } = useChat()
   
   const { 
@@ -66,23 +67,39 @@ export default function VCSimulator() {
 
   const [input, setInput] = useState('')
   const [persona, setPersona] = useState('yc')
+  const [hasStarted, setHasStarted] = useState(false)
   const chatEndRef = useRef(null)
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  // Start session on persona change or first load
+  // Auto-start session once on first mount
   useEffect(() => {
-    if (messages.length === 1 && messages[0].role === 'assistant' && !messages[0].tone) {
-       startSession(persona)
+    if (!hasStarted) {
+      setHasStarted(true)
+      startSession(persona)
     }
-  }, [persona])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    return () => {
+      // Stop all audio when navigating away from VC Simulator
+      stopTTS()
+      stopRecording()
+    }
+  }, [stopTTS, stopRecording])
+
+  const handlePersonaChange = (newPersona) => {
+    setPersona(newPersona)
+    startSession(newPersona)
+  }
 
   const handleSend = async () => {
     if (!input.trim()) return
     const userMsg = input
     setInput('')
+    stopTTS()
     await sendMessage(userMsg, persona)
   }
 
@@ -115,7 +132,7 @@ export default function VCSimulator() {
           {PERSONAS.map(p => (
             <button
               key={p.id}
-              onClick={() => { setPersona(p.id); startSession(p.id); }}
+              onClick={() => handlePersonaChange(p.id)}
               className={`px-4 py-2 rounded-xl text-[11px] font-bold transition-all whitespace-nowrap flex items-center gap-2 ${persona === p.id ? 'bg-accent text-white shadow-lg shadow-accent/20' : 'text-gray-500 hover:text-gray-300'}`}
             >
               <p.icon size={12} /> {p.name}
@@ -183,23 +200,28 @@ export default function VCSimulator() {
           <div className="p-8 bg-black/40 border-t border-white/5 relative">
             <div className="flex items-center gap-6">
               <div className="flex-1 flex items-center gap-4 bg-white/5 rounded-3xl px-6 py-1 border border-white/10 min-h-[72px] transition-all focus-within:border-accent/50 focus-within:bg-white/10">
-                {isListening ? (
-                  <div className="flex-1 flex items-center justify-center gap-8">
+                {isListening && (
+                  <div className="absolute top-2 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2">
                     <Waveform isActive={true} />
-                    <span className="text-[10px] font-black text-red-500 uppercase tracking-[0.3em] animate-pulse">Investor is Listening...</span>
+                    <span className="text-[10px] font-black text-red-500 uppercase tracking-[0.3em] animate-pulse">Speaking... Click Stop when done</span>
                   </div>
-                ) : (
-                  <input 
-                    type="text"
-                    value={input}
-                    onChange={e => setInput(e.target.value)}
-                    onKeyDown={e => e.key === 'Enter' && handleSend()}
-                    placeholder="Provide a detailed answer or defend your numbers..."
-                    className="flex-1 bg-transparent border-none text-sm text-white placeholder:text-gray-600 outline-none py-4"
-                  />
                 )}
+                <input 
+                  type="text"
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && handleSend()}
+                  placeholder={isListening ? "Speak now — your words appear here..." : "Provide a detailed answer or defend your numbers..."}
+                  className={`flex-1 bg-transparent border-none text-sm text-white placeholder:text-gray-600 outline-none py-4 ${isListening ? 'text-green-400' : ''}`}
+                  readOnly={isListening}
+                />
                 {!isListening && (
                    <button onClick={handleSend} disabled={!input.trim() || isTyping} className="w-12 h-12 rounded-2xl bg-accent text-white flex items-center justify-center shadow-lg shadow-accent/20 hover:scale-105 active:scale-95 transition-all disabled:opacity-30">
+                     <Send size={20} />
+                   </button>
+                )}
+                {isListening && (
+                   <button onClick={handleSend} disabled={!input.trim()} className="w-12 h-12 rounded-2xl bg-green-500 text-white flex items-center justify-center shadow-lg shadow-green-500/20 hover:scale-105 active:scale-95 transition-all disabled:opacity-30">
                      <Send size={20} />
                    </button>
                 )}
@@ -208,7 +230,7 @@ export default function VCSimulator() {
               <motion.button 
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={isListening ? stopRecording : () => startRecording(persona)}
+                onClick={isListening ? () => { stopRecording(); } : () => { stopTTS(); startRecording(persona, (text) => setInput(text)); }}
                 className={`w-16 h-16 rounded-[2rem] flex items-center justify-center shadow-2xl transition-all relative group ${isListening ? 'bg-red-500 shadow-red-500/30' : 'bg-accent shadow-accent/30'}`}
               >
                 {isListening ? <Square size={24} className="text-white fill-white" /> : <Mic size={24} className="text-white" />}

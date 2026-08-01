@@ -7,7 +7,7 @@ export const performanceUtils = {
    * Simple benchmark for measuring execution time in development
    */
   measure: (label, fn) => {
-    if (process.env.NODE_ENV !== 'production') {
+    if (import.meta.env.MODE !== 'production') {
       console.time(label);
       const result = fn();
       console.timeEnd(label);

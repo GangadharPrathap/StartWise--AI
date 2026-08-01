@@ -25,11 +25,35 @@ export default function Analyzer() {
     setIdea, 
     selectedCity, 
     setSelectedCity, 
+    selectedSkills,
+    setSelectedSkills,
     isAnalyzing, 
     analyzeIdea 
   } = useIdeaAnalysis()
 
   const cities = ['Delhi NCR', 'Mumbai', 'Bangalore', 'Hyderabad', 'Chennai', 'Pune']
+  const availableSkills = [
+    // Technical
+    'Full-Stack Development', 'Frontend (React/Next.js)', 'Backend (Node/Python)', 'Mobile (React Native)',
+    'Flutter / Dart', 'Machine Learning', 'Data Science', 'Artificial Intelligence', 'Deep Learning / NLP',
+    'Data Analytics', 'DevOps / CI-CD', 'Cloud (AWS/GCP/Azure)', 'Cybersecurity', 'Blockchain / Web3',
+    'Database Management', 'API Development',
+    // Design
+    'UI/UX Design', 'Graphic Design', 'Video Editing / Motion',
+    // Business
+    'Product Management', 'Digital Marketing', 'SEO / SEM', 'Content Writing', 'Sales & BD',
+    'Financial Modeling', 'Legal & Compliance', 'Growth Hacking', 'Social Media Marketing',
+    // Domain
+    'E-commerce', 'Healthcare / Medtech', 'Fintech', 'Edtech'
+  ]
+
+  const toggleSkill = (skill) => {
+    if (selectedSkills.includes(skill)) {
+      setSelectedSkills(selectedSkills.filter(s => s !== skill))
+    } else {
+      setSelectedSkills([...selectedSkills, skill])
+    }
+  }
 
   return (
     <motion.div 
@@ -101,6 +125,27 @@ export default function Analyzer() {
                         }`}
                       >
                         {city}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.3em] flex items-center gap-2">
+                    <Zap size={12} /> Your Current Skills
+                  </label>
+                  <div className="flex flex-wrap gap-3">
+                    {availableSkills.map((skill) => (
+                      <button
+                        key={skill}
+                        onClick={() => toggleSkill(skill)}
+                        className={`py-3 px-5 rounded-2xl text-sm font-bold border transition-all ${
+                          selectedSkills?.includes(skill)
+                            ? 'bg-accent border-accent text-white shadow-lg shadow-accent/20'
+                            : 'bg-white/5 border-white/10 text-gray-500 hover:border-white/20 hover:text-white'
+                        }`}
+                      >
+                        {skill}
                       </button>
                     ))}
                   </div>

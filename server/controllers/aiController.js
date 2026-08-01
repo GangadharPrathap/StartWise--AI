@@ -7,13 +7,11 @@ import { catchAsync } from "../utils/catchAsync.js";
 import { sendSuccess, sendError } from "../utils/responseFormatter.js";
 
 export const generateSlides = catchAsync(async (req, res, next) => {
-  const { idea, currentSlidesCount, additionalCount } = req.body;
+  const { idea, currentSlidesCount = 0, additionalCount = 4 } = req.body;
 
-  if (!GEMINI_API_KEY) {
-    return sendError(res, "Gemini API key is not configured", 500);
-  }
-
-  const systemPrompt = `You are an expert startup pitch deck consultant.
+  if (GEMINI_API_KEY && GEMINI_API_KEY !== "dummy") {
+    try {
+      const systemPrompt = `You are an expert startup pitch deck consultant.
 Generate ${additionalCount} additional pitch deck slides for the given startup idea, starting from slide number ${currentSlidesCount + 1}.
 Return ONLY valid JSON (no extra text) with this exact structure:
 {
@@ -22,9 +20,25 @@ Return ONLY valid JSON (no extra text) with this exact structure:
   ]
 }`;
 
-  const dataStr = await aiService.generateCompletion(systemPrompt, `Idea: ${idea}`);
-  const data = JSON.parse(dataStr);
-  sendSuccess(res, data, "Slides generated successfully");
+      const dataStr = await aiService.generateCompletion(systemPrompt, `Idea: ${idea}`);
+      const data = JSON.parse(dataStr);
+      return sendSuccess(res, data, "Slides generated successfully");
+    } catch (error) {
+      console.warn("Gemini generateSlides failed, using mock:", error.message);
+    }
+  }
+
+  // Fallback: generate template slides
+  const fallbackSlides = [];
+  const templates = ["Traction", "Go-To-Market", "Financial Projections", "Competitive Advantage", "Roadmap", "The Ask"];
+  for (let i = 0; i < additionalCount; i++) {
+    fallbackSlides.push({
+      slideNumber: currentSlidesCount + i + 1,
+      title: templates[i % templates.length],
+      content: `Key points about ${templates[i % templates.length].toLowerCase()} for your startup: ${idea || 'your idea'}. Customize this slide with your actual data and metrics.`
+    });
+  }
+  sendSuccess(res, { pitchSlides: fallbackSlides }, "Slides generated (template)");
 });
 
 export const generateAnalysis = catchAsync(async (req, res, next) => {
@@ -68,6 +82,30 @@ Analyze the given startup idea for the city of ${city} and return ONLY valid JSO
 
 export const generatePresentation = catchAsync(async (req, res, next) => {
   const { idea, slideCount, theme, language, type } = req.body;
+
+  // Try AI-generated content first
+  if (GEMINI_API_KEY && GEMINI_API_KEY !== "dummy" && GEMINI_API_KEY !== "your_gemini_api_key_here") {
+    try {
+      const systemPrompt = `You are an expert startup pitch deck consultant.
+Generate a ${slideCount || 6}-slide pitch deck for the given startup idea.
+Theme: ${theme || 'Startup'}. Language: ${language || 'English'}. Type: ${type || 'investor'}.
+Return ONLY valid JSON (no extra text) with this structure:
+{
+  "slides": [
+    {"slideNumber": number, "title": "string", "content": "string", "speakerNotes": "string"}
+  ],
+  "metadata": { "startupName": "string", "tagline": "string", "theme": "${theme || 'Startup'}" }
+}`;
+
+      const dataStr = await aiService.generateCompletion(systemPrompt, `Idea: ${idea}`);
+      const data = JSON.parse(dataStr);
+      return sendSuccess(res, data, "AI Presentation generated successfully");
+    } catch (error) {
+      console.warn("AI pitch deck failed, falling back to templates:", error.message);
+    }
+  }
+
+  // Fallback to template-based generation
   const data = pitchDeckService.generatePresentationContent(idea, slideCount, theme, language, type);
   sendSuccess(res, data, "Presentation generated successfully");
 });

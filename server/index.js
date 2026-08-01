@@ -12,25 +12,32 @@ import { requestLogger } from "./middleware/logger.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import analysisRouter from "./routes/analysis.js";
 import mentorsRouter from "./routes/mentors.js";
-const app = express();
-app.use(cors());
 
+const app = express();
+
+// --- Core middleware FIRST (before any routes) ---
+app.use(cors());
+app.use(express.json());
+app.use(requestLogger);
+
+// --- Graceful DB connection test ---
 async function testDB() {
+  if (!prisma) {
+    console.warn("⚠️  Skipping DB connection test — Prisma is not initialized (no DATABASE_URL).");
+    return;
+  }
   try {
     await prisma.$connect();
     console.log("✅ PostgreSQL Connected");
   } catch (error) {
-    console.error(error);
+    console.error("⚠️  PostgreSQL connection failed:", error.message);
+    console.warn("⚠️  Server will continue without database. DB-dependent routes may return errors.");
   }
 }
 
-testDB();
-
 async function startServer() {
-  // Middleware
-  app.use(express.json());
-  // app.use(cors());
-  app.use(requestLogger);
+  // Test DB connection (non-blocking)
+  await testDB();
 
   // Security headers for production
   app.use(
@@ -77,18 +84,19 @@ async function startServer() {
 
   // Apply rate limiter to API routes only
   app.use("/api/", limiter);
-app.use("/api/mentors", mentorsRouter);
+
   // Debug route
   app.get("/api/debug-env", (req, res) => {
     res.json({ status: "ok", time: new Date().toISOString() });
   });
 
-  // Routes
+  // --- API Routes (all registered AFTER middleware) ---
+  app.use("/api/mentors", mentorsRouter);
   app.use("/api", apiRouter);
   app.use("/api/analysis", analysisRouter);
   app.use("/api/startups", startupsRouter);
 
-  // Vite middleware for development
+  // --- Vite middleware for development / Static files for production ---
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
       server: { middlewareMode: true },
@@ -98,23 +106,17 @@ app.use("/api/mentors", mentorsRouter);
   } else {
     const distPath = path.join(process.cwd(), "dist");
     app.use(express.static(distPath));
+    // SPA fallback — only for non-API routes
     app.get("*", (req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
     });
   }
 
-
-
-  app.use("*", (req, res) => {
-  res.status(404).json({
-    error: "Route not found"
-  });
-});
-  // Global Error Handler
+  // Global Error Handler (must be last middleware)
   app.use(errorHandler);
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on http://${APP_HOSTNAME}:${PORT}`);
+    console.log(`🚀 Server running on http://${APP_HOSTNAME}:${PORT}`);
   });
 }
 

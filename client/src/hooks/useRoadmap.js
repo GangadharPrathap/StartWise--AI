@@ -19,7 +19,12 @@ export function useRoadmap() {
     const stored = sessionStorage.getItem('startwise_roadmap_data');
     if (stored) {
       try {
-        setRoadmapData(JSON.parse(stored));
+        const parsed = JSON.parse(stored);
+        if (!parsed.roadmap?.skill_gap_analysis || parsed.roadmap.skill_gap_analysis.length === 0) {
+          sessionStorage.removeItem('startwise_roadmap_data');
+        } else {
+          setRoadmapData(parsed);
+        }
       } catch (err) {
         console.error("Failed to parse roadmap data:", err);
       }

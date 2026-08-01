@@ -18,7 +18,7 @@ export default function AIRoadmap() {
     isGenerating
   } = useRoadmap()
 
-  if (isGenerating || !data) {
+  if (isGenerating) {
     return (
       <div className="max-w-4xl mx-auto py-12 px-4 space-y-8">
         <div className="h-20 w-1/3 bg-white/5 rounded-2xl animate-pulse" />
@@ -28,6 +28,34 @@ export default function AIRoadmap() {
         <SkeletonCard />
         <SkeletonList count={5} />
       </div>
+    )
+  }
+
+  if (!data) {
+    return (
+      <motion.div
+        variants={pageVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        className="max-w-4xl mx-auto py-24 px-4 flex flex-col items-center justify-center text-center space-y-6"
+      >
+        <div className="bg-gray-900/50 p-6 rounded-full border border-white/5 shadow-2xl shadow-orange-500/10">
+          <MapIcon size={48} className="text-orange-500" />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-3xl font-extrabold text-white tracking-tight">No Roadmap Generated Yet</h2>
+          <p className="text-gray-400 font-medium max-w-md mx-auto">
+            Run an AI analysis on your startup idea to generate a personalized execution roadmap.
+          </p>
+        </div>
+        <button
+          onClick={() => navigate('/analyzer')}
+          className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-8 rounded-2xl transition-all shadow-lg shadow-orange-500/20 flex items-center gap-2"
+        >
+          Launch Strategy Engine <ChevronRight size={20} />
+        </button>
+      </motion.div>
     )
   }
 
@@ -146,7 +174,11 @@ export default function AIRoadmap() {
               animate={{ opacity: 1, scale: 1 }}
               className="grid grid-cols-1 md:grid-cols-2 gap-6"
             >
-              {skills.map((skill, i) => (
+              {skills.length === 0 ? (
+                <div className="col-span-1 md:col-span-2 text-center text-gray-500 py-8">
+                  No skill gap analysis available. Please run a new analysis.
+                </div>
+              ) : skills.map((skill, i) => (
                 <motion.div 
                   key={i} 
                   variants={cardVariants}

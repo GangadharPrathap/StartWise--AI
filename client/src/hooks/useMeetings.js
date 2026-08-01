@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useAppStore } from '../store/useAppStore';
 import { useAuth } from '../contexts/AuthContext';
+import { apiClient } from '../utils/apiClient';
 import confetti from 'canvas-confetti';
 
 /**
@@ -19,7 +20,22 @@ export function useMeetings() {
     setSchedulingSuccess(false);
     
     try {
+      // Save to Firebase Firestore
       await store.addMeeting(user, meetingData);
+      
+      // Also save to PostgreSQL (non-blocking)
+      try {
+        await apiClient.post('/meetings/save', {
+          firebaseUid: user.uid,
+          email: user.email,
+          investorName: meetingData.investorName || meetingData.investor || 'Unknown',
+          scheduledAt: meetingData.scheduledAt || meetingData.date || new Date().toISOString(),
+          meetingLink: meetingData.meetingLink || ''
+        });
+      } catch (dbErr) {
+        console.warn("Meeting DB save (non-critical):", dbErr.message);
+      }
+
       setSchedulingSuccess(true);
       confetti({ 
         particleCount: 150, 
