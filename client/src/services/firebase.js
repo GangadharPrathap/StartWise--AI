@@ -3,6 +3,8 @@ import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   signOut,
   onAuthStateChanged
 } from "firebase/auth";
@@ -39,14 +41,40 @@ export { auth, db };
 
 export const signInWithGoogle = async () => {
   if (!auth || !provider) {
-    throw new Error("Firebase not configured. Set VITE_FIREBASE_* in .env");
+    console.error("Firebase not configured. VITE_FIREBASE_API_KEY:", import.meta.env.VITE_FIREBASE_API_KEY ? "SET" : "MISSING");
+    throw new Error("Firebase not configured. Set VITE_FIREBASE_* environment variables in Vercel dashboard.");
   }
   try {
+    // Try popup first (works on most desktop browsers)
     const result = await signInWithPopup(auth, provider);
     return result.user;
   } catch (error) {
-    console.error("Auth Error - Google Sign-In Failed:", error);
+    // If popup is blocked or fails, fall back to redirect
+    if (error.code === 'auth/popup-blocked' || 
+        error.code === 'auth/popup-closed-by-user' ||
+        error.code === 'auth/cancelled-popup-request') {
+      console.warn("Popup blocked, falling back to redirect sign-in...");
+      await signInWithRedirect(auth, provider);
+      return null; // Redirect will reload the page
+    }
+    console.error("Auth Error - Google Sign-In Failed:", error.code, error.message);
     throw error;
+  }
+};
+
+// Handle redirect result on page load (for redirect sign-in fallback)
+export const handleRedirectResult = async () => {
+  if (!auth) return null;
+  try {
+    const result = await getRedirectResult(auth);
+    if (result?.user) {
+      console.log("✅ Redirect sign-in successful:", result.user.email);
+      return result.user;
+    }
+    return null;
+  } catch (error) {
+    console.error("Redirect result error:", error);
+    return null;
   }
 };
 

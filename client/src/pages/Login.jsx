@@ -1,12 +1,14 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
-import { Sparkles, LogIn, ShieldCheck, Zap, Globe } from 'lucide-react';
+import { Sparkles, LogIn, ShieldCheck, Zap, Globe, AlertCircle, Loader2 } from 'lucide-react';
 import { signInWithGoogle } from '../services/firebase';
 
 const Login = () => {
   const containerRef = useRef(null);
   const glowRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     // Standard GSAP entrance
@@ -42,6 +44,30 @@ const Login = () => {
 
     return () => ctx.revert();
   }, []);
+
+  const handleGoogleSignIn = async () => {
+    setError(null);
+    setIsLoading(true);
+    try {
+      await signInWithGoogle();
+      // Auth state change will be picked up by App.jsx's onAuthStateChanged listener
+    } catch (err) {
+      console.error("Login failed:", err);
+      if (err.message?.includes('not configured')) {
+        setError('Authentication service is not configured. Please contact the admin.');
+      } else if (err.code === 'auth/unauthorized-domain') {
+        setError('This domain is not authorized for sign-in. Admin must add it to Firebase Console → Authentication → Settings → Authorized domains.');
+      } else if (err.code === 'auth/network-request-failed') {
+        setError('Network error. Please check your internet connection and try again.');
+      } else if (err.code === 'auth/popup-closed-by-user') {
+        setError(null); // User just closed the popup, not a real error
+      } else {
+        setError(err.message || 'Sign-in failed. Please try again.');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div 
@@ -86,12 +112,34 @@ const Login = () => {
               </div>
             </div>
 
+            {/* Error Message */}
+            {error && (
+              <motion.div 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 flex items-start gap-2"
+              >
+                <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+                <p className="text-xs text-red-400 leading-relaxed">{error}</p>
+              </motion.div>
+            )}
+
             <button
-              onClick={signInWithGoogle}
-              className="login-item w-full py-4 px-6 rounded-2xl bg-white text-black font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 hover:bg-orange-500 hover:text-white transition-all duration-300 shadow-xl shadow-white/5"
+              onClick={handleGoogleSignIn}
+              disabled={isLoading}
+              className="login-item w-full py-4 px-6 rounded-2xl bg-white text-black font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 hover:bg-orange-500 hover:text-white transition-all duration-300 shadow-xl shadow-white/5 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <LogIn className="w-4 h-4" />
-              Access Control Tower
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Authenticating...
+                </>
+              ) : (
+                <>
+                  <LogIn className="w-4 h-4" />
+                  Access Control Tower
+                </>
+              )}
             </button>
 
             {/* Emergency Guest Login for testing/demo */}

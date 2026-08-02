@@ -21,7 +21,7 @@ import { useState, useEffect, lazy, Suspense, memo, useMemo, useCallback } from 
 import { onAuthStateChanged } from 'firebase/auth'
 
 // --- Auth & Services ---
-import { auth, signInWithGoogle, logout } from './services/firebase'
+import { auth, signInWithGoogle, logout, handleRedirectResult } from './services/firebase'
 import { AuthProvider } from './contexts/AuthContext'
 import Login from './pages/Login'
 
@@ -85,6 +85,9 @@ function App() {
       setIsAuthReady(true);
       return;
     }
+
+    // Handle redirect sign-in result (if user was redirected back after Google sign-in)
+    handleRedirectResult().catch(err => console.warn('Redirect result check:', err));
 
     const unsubscribe = onAuthStateChanged(auth, (u) => {
       console.log("MAANG Auth Sync - Current User:", u?.email || "Guest");
