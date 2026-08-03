@@ -43,6 +43,7 @@ async function startServer() {
   app.use(
     helmet({
       crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
+      crossOriginEmbedderPolicy: false, // Required for Google sign-in popup
       contentSecurityPolicy: {
         directives: {
           ...helmet.contentSecurityPolicy.getDefaultDirectives(),
@@ -50,24 +51,36 @@ async function startServer() {
             "'self'", "'unsafe-inline'", "'unsafe-eval'",
             "https://unpkg.com", "https://cdn.jsdelivr.net",
             "https://apis.google.com", "https://*.firebaseapp.com",
-            "https://www.googletagmanager.com", "https://maps.googleapis.com"
+            "https://www.googletagmanager.com", "https://maps.googleapis.com",
+            "https://accounts.google.com", "https://www.gstatic.com"
           ],
           "img-src": [
             "'self'", "data:", "https:", "http:",
             "https://*.tile.openstreetmap.org", "https://*.google.com",
             "https://*.googleusercontent.com", "https://www.google-analytics.com",
-            "https://api.dicebear.com"
+            "https://api.dicebear.com", "https://lh3.googleusercontent.com"
           ],
           "connect-src": [
             "'self'", "https:", "http:", "ws:", "wss:",
             "https://*.googleapis.com", "https://*.firebaseapp.com",
-            "https://*.firebase.com",
+            "https://*.firebase.com", "https://*.firebaseio.com",
             "https://www.google-analytics.com", "https://analytics.google.com",
-            "https://firebaseinstallations.googleapis.com"
+            "https://firebaseinstallations.googleapis.com",
+            "https://identitytoolkit.googleapis.com",
+            "https://securetoken.googleapis.com",
+            "https://accounts.google.com"
           ],
-          "frame-src": ["'self'", "https://*.firebaseapp.com", "https://apis.google.com"],
-          "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://unpkg.com"],
+          "frame-src": [
+            "'self'",
+            "https://*.firebaseapp.com",
+            "https://apis.google.com",
+            "https://accounts.google.com",
+            "https://www.google.com",
+            "https://startwiseai-fb26b.firebaseapp.com"
+          ],
+          "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://unpkg.com", "https://accounts.google.com"],
           "font-src": ["'self'", "data:", "https://fonts.gstatic.com"],
+          "form-action": ["'self'", "https://accounts.google.com"],
         },
       },
     })
