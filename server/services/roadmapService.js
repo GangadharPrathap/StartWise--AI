@@ -1,23 +1,74 @@
 const ALL_SKILLS = {
-  "Full-Stack Development": { how_to_learn: "Learn React + Node.js via freeCodeCamp and The Odin Project.", time_to_learn_weeks: 8 },
-  "UI/UX Design": { how_to_learn: "Learn Figma through YouTube. Practice redesigning apps.", time_to_learn_weeks: 4 },
-  "Product Management": { how_to_learn: "Take Google PM Certificate on Coursera. Practice writing PRDs.", time_to_learn_weeks: 4 },
-  "Digital Marketing": { how_to_learn: "Google Digital Garage. Learn SEO, SEM, and content marketing.", time_to_learn_weeks: 3 },
-  "Financial Modeling": { how_to_learn: "Learn from CFI free courses. Build P&L, cashflow models.", time_to_learn_weeks: 3 },
-  "Data Analytics": { how_to_learn: "Learn SQL + Python. Take Google Data Analytics Certificate.", time_to_learn_weeks: 4 },
-  "Sales & BD": { how_to_learn: "Read 'The Lean Startup'. Practice cold outreach.", time_to_learn_weeks: 2 },
-  "Cloud (AWS/GCP/Azure)": { how_to_learn: "AWS Cloud Practitioner certification. Deploy projects.", time_to_learn_weeks: 3 },
-  "Machine Learning": { how_to_learn: "Andrew Ng's ML course. Build ML projects.", time_to_learn_weeks: 8 },
-  "Mobile (React Native)": { how_to_learn: "Expo documentation + React Native tutorial.", time_to_learn_weeks: 4 },
-  "Legal & Compliance": { how_to_learn: "Learn DPIIT Startup India registration. Understand GST.", time_to_learn_weeks: 2 },
-  "Content Writing": { how_to_learn: "Write 20 blog posts on Medium. Study copywriting frameworks.", time_to_learn_weeks: 2 },
-  "Growth Hacking": { how_to_learn: "Read 'Hacking Growth'. Learn A/B testing, viral loops.", time_to_learn_weeks: 3 },
-  "DevOps / CI-CD": { how_to_learn: "Learn GitHub Actions, Docker, and Kubernetes.", time_to_learn_weeks: 3 },
-  "SEO / SEM": { how_to_learn: "Google Ads certification. Learn keyword research.", time_to_learn_weeks: 2 },
-  "Cybersecurity": { how_to_learn: "Learn OWASP Top 10. Understand basic penetration testing.", time_to_learn_weeks: 5 },
-  "Healthcare Regulations": { how_to_learn: "Study HIPAA and Indian healthcare laws.", time_to_learn_weeks: 3 },
-  "Video Editing": { how_to_learn: "Learn Premiere Pro or DaVinci Resolve via YouTube tutorials.", time_to_learn_weeks: 3 },
-  "Supply Chain Management": { how_to_learn: "Study logistics basics and inventory management.", time_to_learn_weeks: 4 }
+  // Technical Core
+  "Full-Stack Development": { how_to_learn: "Complete freeCodeCamp's Full Stack curriculum and The Odin Project. Build 3 production-level full-stack MERN/PERN apps.", time_to_learn_weeks: 12 },
+  "Frontend (React/Next.js)": { how_to_learn: "Take Epic React by Kent C. Dodds or Scrimba's React Bootcamp. Build a responsive e-commerce storefront with Next.js.", time_to_learn_weeks: 8 },
+  "Backend (Node/Python)": { how_to_learn: "Complete CS50 Web Programming or Node.js on Udemy. Build RESTful APIs, learn WebSockets, and implement JWT auth.", time_to_learn_weeks: 8 },
+  "Mobile (React Native)": { how_to_learn: "Follow the Expo documentation and React Native tutorials on YouTube. Build and deploy a cross-platform mobile app to App Store and Play Store.", time_to_learn_weeks: 6 },
+  "Flutter / Dart": { how_to_learn: "Complete Angela Yu's Flutter Bootcamp on Udemy. Build a cross-platform UI with animations and Firebase integration.", time_to_learn_weeks: 8 },
+  "iOS (Swift)": { how_to_learn: "Complete 100 Days of SwiftUI by Paul Hudson (Hacking with Swift). Build 3 native iOS apps.", time_to_learn_weeks: 10 },
+  "Android (Kotlin)": { how_to_learn: "Complete the Android Basics in Kotlin course by Google. Build native Android apps with Jetpack Compose.", time_to_learn_weeks: 10 },
+  
+  // Data & AI
+  "Machine Learning": { how_to_learn: "Complete Andrew Ng's Machine Learning Specialization on Coursera (free audit). Build 3 projects: image classifier (TensorFlow), sentiment analyzer (NLTK), recommendation engine (scikit-learn). Deploy one on Hugging Face Spaces.", time_to_learn_weeks: 12 },
+  "Data Science": { how_to_learn: "Complete the IBM Data Science Professional Certificate. Master Python, Pandas, and SciPy for data wrangling.", time_to_learn_weeks: 12 },
+  "Artificial Intelligence": { how_to_learn: "Take CS50's Introduction to AI with Python. Build search algorithms, game-playing AI, and constraint satisfaction solvers.", time_to_learn_weeks: 10 },
+  "Deep Learning / NLP": { how_to_learn: "Complete deeplearning.ai's NLP Specialization. Build sentiment analyzers and chatbots using PyTorch and Hugging Face.", time_to_learn_weeks: 10 },
+  "Data Analytics": { how_to_learn: "Get the Google Data Analytics Professional Certificate on Coursera. Master SQL, Tableau, and basic Python.", time_to_learn_weeks: 8 },
+  "Data Engineering": { how_to_learn: "Learn Apache Spark, Airflow, and Kafka. Complete the Data Engineering Zoomcamp (free on YouTube).", time_to_learn_weeks: 12 },
+  "Computer Vision": { how_to_learn: "Take the First Principles of Computer Vision course. Build object detection and facial recognition models using OpenCV.", time_to_learn_weeks: 10 },
+  
+  // Infrastructure
+  "DevOps / CI-CD": { how_to_learn: "Learn Docker, Kubernetes, and GitHub Actions. Deploy a microservices architecture on a cloud provider.", time_to_learn_weeks: 8 },
+  "Cloud (AWS/GCP/Azure)": { how_to_learn: "Get AWS Cloud Practitioner or GCP Cloud Digital Leader certified. Practice deploying scalable apps.", time_to_learn_weeks: 6 },
+  "Cybersecurity": { how_to_learn: "Study OWASP Top 10. Take the CompTIA Security+ certification. Practice ethical hacking on TryHackMe.", time_to_learn_weeks: 10 },
+  "Database Management": { how_to_learn: "Master SQL (PostgreSQL) and NoSQL (MongoDB). Learn database normalization, indexing, and sharding.", time_to_learn_weeks: 6 },
+  "API Development": { how_to_learn: "Learn REST and GraphQL principles. Build robust, documented APIs using Postman and Swagger.", time_to_learn_weeks: 4 },
+  "System Architecture": { how_to_learn: "Read 'Designing Data-Intensive Applications' by Martin Kleppmann. Study system design interview resources.", time_to_learn_weeks: 8 },
+  "Blockchain / Web3": { how_to_learn: "Complete buildspace projects. Learn Solidity and build smart contracts on Ethereum.", time_to_learn_weeks: 8 },
+  
+  // Design
+  "UI/UX Design": { how_to_learn: "Get the Google UX Design Certificate. Master Figma and build 3 full case studies for your portfolio.", time_to_learn_weeks: 12 },
+  "Graphic Design": { how_to_learn: "Learn Adobe Illustrator and Photoshop via YouTube. Practice branding and vector graphics.", time_to_learn_weeks: 6 },
+  "Video Editing / Motion": { how_to_learn: "Learn Premiere Pro and After Effects through Envato Tuts+. Edit 5 short-form videos for TikTok/Reels.", time_to_learn_weeks: 6 },
+  "3D Design / AR-VR": { how_to_learn: "Learn Blender through the famous Donut tutorial on YouTube. Explore Unity for AR/VR basics.", time_to_learn_weeks: 10 },
+  "Brand Identity Design": { how_to_learn: "Read 'Logo Design Love'. Practice creating full brand style guides (logos, typography, colors).", time_to_learn_weeks: 6 },
+  
+  // Business & Strategy
+  "Product Management": { how_to_learn: "Get the Product School PM Certificate. Write PRDs and conduct user interviews for a mock product.", time_to_learn_weeks: 8 },
+  "Project Management": { how_to_learn: "Get the Google Project Management Certificate. Learn Agile, Scrum, and Jira.", time_to_learn_weeks: 6 },
+  "Business Strategy": { how_to_learn: "Read 'Good Strategy Bad Strategy' and 'The Lean Startup'. Analyze HBS case studies.", time_to_learn_weeks: 6 },
+  "Financial Modeling": { how_to_learn: "Take free CFI courses. Build a 3-statement model, DCF valuation, and startup P&L.", time_to_learn_weeks: 6 },
+  "Legal & Compliance": { how_to_learn: "Study DPIIT Startup India requirements, company incorporation processes, and basic GST rules.", time_to_learn_weeks: 4 },
+  "Fundraising & Pitching": { how_to_learn: "Read 'Venture Deals'. Create a 10-slide pitch deck and practice pitching to peers.", time_to_learn_weeks: 4 },
+  "Unit Economics": { how_to_learn: "Learn to calculate LTV, CAC, Payback Period, and gross margins for different business models.", time_to_learn_weeks: 3 },
+  "Market Research": { how_to_learn: "Learn to calculate TAM/SAM/SOM. Conduct surveys and analyze competitor positioning.", time_to_learn_weeks: 4 },
+  
+  // Marketing & Growth
+  "Digital Marketing": { how_to_learn: "Complete the Google Digital Garage course. Run a small budget test campaign on Meta Ads.", time_to_learn_weeks: 6 },
+  "SEO / SEM": { how_to_learn: "Get Google Ads certified. Learn Ahrefs or Semrush via their free academy to master keyword research.", time_to_learn_weeks: 6 },
+  "Content Writing": { how_to_learn: "Publish 10 articles on Medium/Substack. Learn copywriting frameworks (AIDA, PAS).", time_to_learn_weeks: 4 },
+  "Social Media Marketing": { how_to_learn: "Take HubSpot's Social Media Certification. Manage a brand account for 30 days.", time_to_learn_weeks: 4 },
+  "Growth Hacking": { how_to_learn: "Read 'Hacking Growth' by Sean Ellis. Implement A/B testing and design a viral loop.", time_to_learn_weeks: 6 },
+  "Email Marketing": { how_to_learn: "Learn Mailchimp or Klaviyo. Build automated email sequences (welcome, abandoned cart).", time_to_learn_weeks: 3 },
+  "Influencer Marketing": { how_to_learn: "Learn how to source and negotiate with micro-influencers. Run a test campaign.", time_to_learn_weeks: 4 },
+  "Community Building": { how_to_learn: "Build and moderate a Discord or Slack community around a niche topic.", time_to_learn_weeks: 6 },
+  "PR & Communications": { how_to_learn: "Learn to write press releases and pitch journalists via HARO/QWERTY.", time_to_learn_weeks: 4 },
+  
+  // Sales & Operations
+  "Sales & BD": { how_to_learn: "Read 'Predictable Revenue'. Build a lead list and run a cold email outreach sequence.", time_to_learn_weeks: 6 },
+  "Customer Success": { how_to_learn: "Learn onboarding best practices and churn reduction strategies. Handle support tickets.", time_to_learn_weeks: 4 },
+  "Supply Chain Management": { how_to_learn: "Take Rutgers Supply Chain Management course on Coursera. Learn inventory forecasting.", time_to_learn_weeks: 8 },
+  "Operations Management": { how_to_learn: "Learn process mapping and Six Sigma basics to optimize workflows and reduce waste.", time_to_learn_weeks: 6 },
+  "People Management / HR": { how_to_learn: "Learn tech recruiting, payroll basics, and how to conduct effective 1-on-1s.", time_to_learn_weeks: 4 },
+  
+  // Domain-Specific
+  "Healthcare Regulations": { how_to_learn: "Study HIPAA, GDPR for health, and local regulations (like ABDM in India).", time_to_learn_weeks: 6 },
+  "Fintech Compliance (RBI/SEBI)": { how_to_learn: "Study RBI guidelines for payment aggregators, KYC/AML laws, and SEBI rules.", time_to_learn_weeks: 8 },
+  "EdTech Pedagogy": { how_to_learn: "Learn instructional design principles. Take a course on adult learning theory.", time_to_learn_weeks: 6 },
+  "E-commerce Operations": { how_to_learn: "Master Shopify admin. Learn fulfillment, returns management, and dropshipping logistics.", time_to_learn_weeks: 6 },
+  "Logistics & Delivery Ops": { how_to_learn: "Learn route optimization and last-mile delivery tracking systems.", time_to_learn_weeks: 6 },
+  "IoT / Hardware": { how_to_learn: "Get an Arduino/Raspberry Pi kit. Build a basic sensor-driven connected device.", time_to_learn_weeks: 10 },
+  "Sustainability / ESG": { how_to_learn: "Take an ESG framework course. Learn carbon accounting basics for startups.", time_to_learn_weeks: 6 }
 };
 
 function detectDomain(idea) {
@@ -39,7 +90,7 @@ function detectDomain(idea) {
 const domainConfigs = {
   food_delivery: {
     complexity: 'medium',
-    requiredSkills: ['Mobile (React Native)', 'Sales & BD', 'Digital Marketing', 'Supply Chain Management'],
+    requiredSkills: ['Mobile (React Native)', 'Sales & BD', 'Digital Marketing', 'Supply Chain Management', 'UI/UX Design', 'Cloud (AWS/GCP/Azure)', 'Operations Management', 'Financial Modeling', 'Customer Success', 'Legal & Compliance', 'Data Analytics', 'Logistics & Delivery Ops'],
     stages: [
       {
         stage_number: 1, stage_name: "Menu & Vendor Partnerships", stage_title: "Onboard Initial Restaurants", duration_weeks: 4,
@@ -95,7 +146,7 @@ const domainConfigs = {
   },
   edtech: {
     complexity: 'medium',
-    requiredSkills: ['Full-Stack Development', 'Content Writing', 'Video Editing', 'Digital Marketing'],
+    requiredSkills: ['Full-Stack Development', 'Content Writing', 'Video Editing / Motion', 'Digital Marketing', 'UI/UX Design', 'EdTech Pedagogy', 'Community Building', 'SEO / SEM', 'Data Analytics', 'Product Management', 'Email Marketing', 'Social Media Marketing'],
     stages: [
       {
         stage_number: 1, stage_name: "Curriculum Design & Research", stage_title: "Define the Learning Outcome", duration_weeks: 4,
@@ -151,7 +202,7 @@ const domainConfigs = {
   },
   fintech: {
     complexity: 'high',
-    requiredSkills: ['Full-Stack Development', 'Financial Modeling', 'Legal & Compliance', 'Cybersecurity'],
+    requiredSkills: ['Full-Stack Development', 'Financial Modeling', 'Legal & Compliance', 'Cybersecurity', 'Fintech Compliance (RBI/SEBI)', 'Data Analytics', 'Cloud (AWS/GCP/Azure)', 'API Development', 'UI/UX Design', 'Product Management', 'Unit Economics', 'Database Management'],
     stages: [
       {
         stage_number: 1, stage_name: "Regulatory Research & Licensing", stage_title: "Navigate Compliance", duration_weeks: 8,
@@ -207,7 +258,7 @@ const domainConfigs = {
   },
   healthtech: {
     complexity: 'high',
-    requiredSkills: ['Full-Stack Development', 'Healthcare Regulations', 'Data Analytics', 'Sales & BD'],
+    requiredSkills: ['Full-Stack Development', 'Healthcare Regulations', 'Data Analytics', 'Sales & BD', 'UI/UX Design', 'Machine Learning', 'Cybersecurity', 'Cloud (AWS/GCP/Azure)', 'Product Management', 'Legal & Compliance', 'Market Research', 'Data Science'],
     stages: [
       {
         stage_number: 1, stage_name: "Problem Validation & Compliance", stage_title: "Understand the Medical Need", duration_weeks: 6,
@@ -263,7 +314,7 @@ const domainConfigs = {
   },
   ecommerce: {
     complexity: 'medium',
-    requiredSkills: ['UI/UX Design', 'Digital Marketing', 'Supply Chain Management', 'SEO / SEM'],
+    requiredSkills: ['UI/UX Design', 'Digital Marketing', 'Supply Chain Management', 'SEO / SEM', 'Full-Stack Development', 'E-commerce Operations', 'Social Media Marketing', 'Content Writing', 'Financial Modeling', 'Customer Success', 'Influencer Marketing', 'Data Analytics'],
     stages: [
       {
         stage_number: 1, stage_name: "Product Sourcing & Catalog", stage_title: "Define Inventory", duration_weeks: 4,
@@ -319,7 +370,7 @@ const domainConfigs = {
   },
   ai_ml: {
     complexity: 'high',
-    requiredSkills: ['Machine Learning', 'Full-Stack Development', 'Data Analytics', 'Cloud (AWS/GCP/Azure)'],
+    requiredSkills: ['Machine Learning', 'Full-Stack Development', 'Data Analytics', 'Cloud (AWS/GCP/Azure)', 'Data Science', 'Deep Learning / NLP', 'Data Engineering', 'API Development', 'DevOps / CI-CD', 'Product Management', 'System Architecture', 'Financial Modeling'],
     stages: [
       {
         stage_number: 1, stage_name: "Data Collection & Model Research", stage_title: "Define the AI Solution", duration_weeks: 6,
@@ -375,7 +426,7 @@ const domainConfigs = {
   },
   saas: {
     complexity: 'medium',
-    requiredSkills: ['Full-Stack Development', 'Product Management', 'Growth Hacking', 'UI/UX Design'],
+    requiredSkills: ['Full-Stack Development', 'Product Management', 'Growth Hacking', 'UI/UX Design', 'Cloud (AWS/GCP/Azure)', 'DevOps / CI-CD', 'SEO / SEM', 'Content Writing', 'Sales & BD', 'Financial Modeling', 'Customer Success', 'Data Analytics', 'Email Marketing'],
     stages: [
       {
         stage_number: 1, stage_name: "Problem Validation & Scoping", stage_title: "Define the Workflow", duration_weeks: 4,
@@ -431,7 +482,7 @@ const domainConfigs = {
   },
   general: {
     complexity: 'medium',
-    requiredSkills: ['Product Management', 'Digital Marketing', 'Sales & BD', 'Financial Modeling'],
+    requiredSkills: ['Product Management', 'Digital Marketing', 'Sales & BD', 'Financial Modeling', 'Full-Stack Development', 'UI/UX Design', 'Legal & Compliance', 'Data Analytics', 'Content Writing', 'Growth Hacking', 'Market Research', 'Fundraising & Pitching'],
     stages: [
       {
         stage_number: 1, stage_name: "Discovery & Validation", stage_title: "Market Research & Idea Validation", duration_weeks: 3,
@@ -497,6 +548,48 @@ function getFundingEstimate(complexity) {
   }
 }
 
+function getTrendingSkills(domain) {
+  const trends = {
+    food_delivery: ['AI-Powered Demand Forecasting', 'Dark Store Operations', 'Drone Delivery Tech', 'Sustainability in Packaging'],
+    edtech: ['AI Tutoring Systems', 'Gamification Design', 'Micro-credentials', 'AR/VR in Education'],
+    fintech: ['Embedded Finance APIs', 'Open Banking (UPI/AA)', 'RegTech Automation', 'DeFi / CBDC Integration'],
+    healthtech: ['Telemedicine Platforms', 'AI Diagnostics', 'Wearable Data Integration', 'Mental Health Tech'],
+    ecommerce: ['Social Commerce (Live Shopping)', 'Headless Commerce', 'AR Try-On', 'Quick Commerce (<10 min delivery)'],
+    ai_ml: ['Generative AI / LLMs', 'MLOps & Model Monitoring', 'Edge AI Deployment', 'Responsible AI / AI Ethics'],
+    saas: ['Product-Led Growth (PLG)', 'AI-Native Features', 'Usage-Based Pricing', 'Vertical SaaS Specialization'],
+    general: ['AI Integration', 'Data-Driven Decision Making', 'Remote Team Management', 'Sustainability Practices']
+  };
+  return trends[domain] || trends['general'];
+}
+
+function getIndustryOutlook(domain) {
+  const outlooks = {
+    food_delivery: 'Indian food delivery market projected to reach $21B by 2027. Key growth: tier-2/3 cities, cloud kitchens, and subscription models.',
+    edtech: 'Indian edtech market expected to reach $10.4B by 2025. Shift toward skill-based learning, vernacular content, and B2B enterprise training.',
+    fintech: 'India fintech market at $150B+ by 2025. UPI processes 10B+ transactions/month. Opportunities in lending, insurance, and wealth management.',
+    healthtech: 'India digital health market growing at 39% CAGR. Government push via ABHA, telemedicine adoption up 300% post-COVID.',
+    ecommerce: 'Indian e-commerce to reach $200B by 2026. D2C brands growing 3x faster than marketplaces. Social commerce emerging fast.',
+    ai_ml: 'India AI market projected at $17B by 2027. Demand for AI talent growing 4x. Key sectors: healthcare, fintech, agriculture.',
+    saas: 'India has 25,000+ SaaS companies with $12B+ revenue. 5 Indian SaaS unicorns. B2B SaaS growing 35% YoY.',
+    general: 'Indian startup ecosystem is 3rd largest globally with 100+ unicorns. Key focus areas: AI, climate tech, and deep tech.'
+  };
+  return outlooks[domain] || outlooks['general'];
+}
+
+function getRecommendedCerts(domain) {
+  const certs = {
+    food_delivery: ['Google Project Management Certificate', 'AWS Solutions Architect', 'Six Sigma Green Belt'],
+    edtech: ['Google UX Design Certificate', 'Instructional Design MasterTrack', 'HubSpot Content Marketing'],
+    fintech: ['CFA Level 1', 'AWS Security Specialty', 'CAMS (Anti-Money Laundering)'],
+    healthtech: ['Google Data Analytics', 'HIPAA Compliance Certificate', 'HL7 FHIR Fundamentals'],
+    ecommerce: ['Google Ads Certification', 'Shopify Partner Academy', 'Facebook Blueprint'],
+    ai_ml: ['TensorFlow Developer Certificate', 'AWS ML Specialty', 'Google Cloud Professional ML Engineer'],
+    saas: ['Product School PM Certificate', 'HubSpot Inbound Marketing', 'Salesforce Admin'],
+    general: ['Google Project Management', 'HubSpot Digital Marketing', 'Startup India Registration Workshop']
+  };
+  return certs[domain] || certs['general'];
+}
+
 export function generateMockRoadmap(idea, year, skills) {
   const ideaShort = idea ? idea.substring(0, 80) : "a startup";
   const userSkills = Array.isArray(skills) ? skills.map(s => s.toLowerCase()) : [];
@@ -548,6 +641,11 @@ export function generateMockRoadmap(idea, year, skills) {
     total_estimated_weeks: totalWeeks,
     stages: stages,
     skill_gap_analysis: skillGaps,
+    market_insights: {
+      trending_skills: getTrendingSkills(domain),
+      industry_outlook: getIndustryOutlook(domain),
+      recommended_certifications: getRecommendedCerts(domain)
+    },
     funding_path: {
       bootstrap_cost_estimate: getFundingEstimate(config.complexity),
       stage_for_funding: "Post-MVP with initial users and measurable traction",

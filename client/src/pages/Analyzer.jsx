@@ -33,18 +33,28 @@ export default function Analyzer() {
 
   const cities = ['Delhi NCR', 'Mumbai', 'Bangalore', 'Hyderabad', 'Chennai', 'Pune']
   const availableSkills = [
-    // Technical
+    // Technical Core
     'Full-Stack Development', 'Frontend (React/Next.js)', 'Backend (Node/Python)', 'Mobile (React Native)',
-    'Flutter / Dart', 'Machine Learning', 'Data Science', 'Artificial Intelligence', 'Deep Learning / NLP',
-    'Data Analytics', 'DevOps / CI-CD', 'Cloud (AWS/GCP/Azure)', 'Cybersecurity', 'Blockchain / Web3',
-    'Database Management', 'API Development',
+    'Flutter / Dart', 'iOS (Swift)', 'Android (Kotlin)',
+    // Data & AI
+    'Machine Learning', 'Data Science', 'Artificial Intelligence', 'Deep Learning / NLP',
+    'Data Analytics', 'Data Engineering', 'Computer Vision',
+    // Infrastructure
+    'DevOps / CI-CD', 'Cloud (AWS/GCP/Azure)', 'Cybersecurity', 'Database Management',
+    'API Development', 'System Architecture', 'Blockchain / Web3',
     // Design
-    'UI/UX Design', 'Graphic Design', 'Video Editing / Motion',
-    // Business
-    'Product Management', 'Digital Marketing', 'SEO / SEM', 'Content Writing', 'Sales & BD',
-    'Financial Modeling', 'Legal & Compliance', 'Growth Hacking', 'Social Media Marketing',
-    // Domain
-    'E-commerce', 'Healthcare / Medtech', 'Fintech', 'Edtech'
+    'UI/UX Design', 'Graphic Design', 'Video Editing / Motion', '3D Design / AR-VR', 'Brand Identity Design',
+    // Business & Strategy
+    'Product Management', 'Project Management', 'Business Strategy', 'Financial Modeling',
+    'Legal & Compliance', 'Fundraising & Pitching', 'Unit Economics', 'Market Research',
+    // Marketing & Growth
+    'Digital Marketing', 'SEO / SEM', 'Content Writing', 'Social Media Marketing',
+    'Growth Hacking', 'Email Marketing', 'Influencer Marketing', 'Community Building', 'PR & Communications',
+    // Sales & Operations
+    'Sales & BD', 'Customer Success', 'Supply Chain Management', 'Operations Management', 'People Management / HR',
+    // Domain-Specific
+    'Healthcare Regulations', 'Fintech Compliance (RBI/SEBI)', 'EdTech Pedagogy',
+    'E-commerce Operations', 'Logistics & Delivery Ops', 'IoT / Hardware', 'Sustainability / ESG'
   ]
 
   const toggleSkill = (skill) => {

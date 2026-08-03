@@ -45,6 +45,7 @@ export function useRoadmap() {
     roadmap: roadmapData?.roadmap,
     stages: roadmapData?.roadmap?.stages || [],
     skills: roadmapData?.roadmap?.skill_gap_analysis || [],
+    marketInsights: roadmapData?.roadmap?.market_insights || null,
     domainAnalysis: roadmapData?.domain_analysis
   };
 }

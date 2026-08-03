@@ -14,6 +14,7 @@ export default function AIRoadmap() {
     stages, 
     skills, 
     roadmap, 
+    marketInsights,
     domainAnalysis,
     isGenerating
   } = useRoadmap()
@@ -202,6 +203,50 @@ export default function AIRoadmap() {
                   )}
                 </motion.div>
               ))}
+            </motion.div>
+          )}
+
+          {activeTab === 'skills' && marketInsights && (
+            <motion.div 
+              key="market-insights"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="mt-8 space-y-6"
+            >
+              {/* Industry Outlook */}
+              <div className="bg-gradient-to-br from-blue-500/10 via-transparent to-transparent border border-blue-500/20 rounded-[2rem] p-8">
+                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-400 mb-4">📊 Industry Outlook</h3>
+                <p className="text-gray-300 text-sm leading-relaxed">{marketInsights.industry_outlook}</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Trending Skills */}
+                <div className="bg-gray-900/40 border border-white/5 rounded-[2rem] p-8">
+                  <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-400 mb-4">🔥 Trending Skills in Market</h3>
+                  <div className="space-y-3">
+                    {marketInsights.trending_skills?.map((skill, i) => (
+                      <div key={i} className="flex items-center gap-3">
+                        <span className="w-6 h-6 rounded-lg bg-orange-500/10 text-orange-400 text-[10px] font-black flex items-center justify-center">{i + 1}</span>
+                        <span className="text-sm text-gray-300">{skill}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Recommended Certifications */}
+                <div className="bg-gray-900/40 border border-white/5 rounded-[2rem] p-8">
+                  <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-green-400 mb-4">🎓 Recommended Certifications</h3>
+                  <div className="space-y-3">
+                    {marketInsights.recommended_certifications?.map((cert, i) => (
+                      <div key={i} className="flex items-center gap-3">
+                        <span className="w-6 h-6 rounded-lg bg-green-500/10 text-green-400 text-[10px] font-black flex items-center justify-center">✓</span>
+                        <span className="text-sm text-gray-300">{cert}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </motion.div>
           )}
 
