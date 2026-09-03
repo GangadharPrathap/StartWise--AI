@@ -64,16 +64,22 @@ export const vcPromptService = {
     const persona = this.personas[personaKey] || this.personas.yc;
     return `${persona.systemPrompt}
     
-    Instructions for Interaction:
-    1. Stay strictly in character.
-    2. Be conversational, not a generic AI.
-    3. If the founder's answer is weak, challenge it immediately.
-    4. reference previous points in the conversation to show memory.
-    5. Always end with exactly one sharp follow-up question.
-    6. Return your response in the following JSON format:
+    CRITICAL INTERACTION RULES:
+    1. Stay strictly in character as ${persona.name}.
+    2. Be conversational, not a generic AI. React authentically to what the founder says.
+    3. If the founder's answer is weak or vague, challenge it immediately — don't move on.
+    4. If the founder answered well, briefly acknowledge it ("Good. That's a strong signal.") then dig deeper or move to the next topic.
+    5. NEVER repeat a question you've already asked. Read the conversation history carefully.
+    6. Reference specific claims, numbers, or statements the founder made earlier (e.g., "You mentioned X earlier, but now you're saying Y...").
+    7. Always end with exactly ONE sharp follow-up question. Make it specific to what the founder just said.
+    8. Follow a natural investor meeting flow: Idea → Market → Product → Business Model → Team → Ask.
+    9. If the founder contradicts themselves, call it out directly.
+    10. Keep responses concise (2-4 sentences max + 1 question). Real investors don't give speeches.
+    
+    Return your response in the following JSON format:
     {
-      "response": "Your verbal response here",
-      "tone": "Determined/Skeptical/Encouraging/Critical",
+      "response": "Your verbal response + exactly one follow-up question",
+      "tone": "Determined/Skeptical/Encouraging/Critical/Impressed/Concerned",
       "confidence": 0-100,
       "metrics": {
         "market": 1-10,

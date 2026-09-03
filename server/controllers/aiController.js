@@ -145,37 +145,71 @@ export const generateRoadmap = catchAsync(async (req, res, next) => {
   const { idea_text, student_year, existing_skills, timeline_preference, idea_type } = req.body;
 
   try {
-    const systemPrompt = `You are an expert startup architect.
-Generate a detailed execution roadmap for this startup idea.
-Consider the founder is a ${student_year} year student with these skills: ${existing_skills?.join(", ") || 'No specific skills mentioned'}.
-Timeline preference: ${timeline_preference || 'Standard'}. Idea Type: ${idea_type || 'General'}.
+    const skillsList = existing_skills?.length > 0 ? existing_skills.join(", ") : 'No specific skills mentioned';
+    
+    const systemPrompt = `You are an expert startup execution strategist who has helped 100+ Indian startups go from idea to launch.
+Your job is to create a HIGHLY SPECIFIC, ACTIONABLE execution roadmap for the exact startup idea given below.
+
+CRITICAL RULES:
+1. Every stage name, task, and milestone MUST be directly related to "${idea_text}". Do NOT give generic startup advice.
+2. Tasks should mention specific tools, platforms, APIs, and frameworks relevant to THIS particular idea.
+3. Include India-specific advice: Indian payment gateways (Razorpay, PhonePe), Indian hosting (Railway, Vercel), Indian legal (DPIIT, GST), Indian grants (Startup India, TIDE 2.0).
+4. The skill gap analysis should compare what's needed for THIS specific idea vs what the student already knows.
+5. Each task's "how_to_do_it" should be a practical 2-3 sentence instruction, not vague advice.
+6. Stage names should reflect the actual product being built (e.g., "Build Food Ordering Flow" not just "Development Phase").
+
+FOUNDER PROFILE:
+- Student Year: ${student_year || 'Not specified'}
+- Existing Skills: ${skillsList}
+- Timeline: ${timeline_preference || 'Standard (6 months)'}
+- Idea Type: ${idea_type || 'General'}
+
+Generate a roadmap with 5-7 stages, each with 3-5 specific tasks.
+
 Return ONLY valid JSON (no extra text) with this structure:
 {
-  "idea_summary": "string",
+  "idea_summary": "A 2-sentence summary of what this startup does and who it serves",
   "idea_viability_score": number (1-10),
-  "viability_reasoning": "string",
+  "viability_reasoning": "Why this score — mention market size, competition, and feasibility for a ${student_year || ''} student",
   "total_estimated_weeks": number,
   "stages": [
     {
       "stage_number": number,
-      "stage_name": "string",
-      "stage_title": "string",
+      "stage_name": "Specific name related to the idea (e.g., 'Restaurant Partner Onboarding' not 'Phase 1')",
+      "stage_title": "What gets accomplished in this stage",
       "duration_weeks": number,
-      "tasks": [{"task": "string", "how_to_do_it": "string"}],
-      "checkpoint": "string"
+      "tasks": [
+        {
+          "task": "Specific task name related to the idea",
+          "how_to_do_it": "2-3 sentence practical instruction with specific tools/platforms"
+        }
+      ],
+      "checkpoint": "What must be true before moving to next stage"
     }
   ],
   "skill_gap_analysis": [
-    {"skill_needed": "string", "student_has_it": boolean, "how_to_learn": "string", "time_to_learn_weeks": number}
+    {
+      "skill_needed": "Specific skill needed for THIS idea",
+      "student_has_it": boolean,
+      "how_to_learn": "Specific course or resource recommendation",
+      "time_to_learn_weeks": number
+    }
   ],
   "funding_path": {
-    "bootstrap_cost_estimate": "string",
-    "stage_for_funding": "string",
-    "indian_grants_and_programs": [{"name": "string", "amount": "string", "eligibility": "string", "url": "string"}]
+    "bootstrap_cost_estimate": "Realistic cost estimate in INR",
+    "stage_for_funding": "Which stage is right to seek external funding",
+    "indian_grants_and_programs": [
+      {
+        "name": "Name of the grant/program",
+        "amount": "Grant amount",
+        "eligibility": "Who can apply",
+        "url": "Application URL"
+      }
+    ]
   }
 }`;
 
-    const dataStr = await aiService.generateCompletion(systemPrompt, `Idea: ${idea_text}`);
+    const dataStr = await aiService.generateCompletion(systemPrompt, `STARTUP IDEA: ${idea_text}\n\nGenerate a detailed, idea-specific execution roadmap for this exact startup. Every task and stage should be tailored to building "${idea_text}".`);
     const data = JSON.parse(dataStr);
     sendSuccess(res, data, "Roadmap generated successfully");
   } catch (error) {

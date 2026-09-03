@@ -62,9 +62,13 @@ export function useChat() {
     setTyping(true);
 
     try {
+      // IMPORTANT: Read fresh messages from store AFTER addMessage has updated it.
+      // Using the closure `messages` would give stale state (before addMessage ran).
+      const currentMessages = useChatStore.getState().messages;
+
       const response = await apiClient.post('/vc/chat', { 
         message: text, 
-        history: messages,
+        history: currentMessages,
         persona: persona
       });
       
@@ -90,7 +94,7 @@ export function useChat() {
     } finally {
       setTyping(false);
     }
-  }, [messages, addMessage, setTyping, setScore]);
+  }, [addMessage, setTyping, setScore]);
 
   /**
    * Final Evaluation
@@ -99,8 +103,9 @@ export function useChat() {
     setEvaluating(true);
     setStatus('evaluating');
     try {
+      const currentMessages = useChatStore.getState().messages;
       const response = await apiClient.post('/vc/evaluate', { 
-        history: messages,
+        history: currentMessages,
         persona: persona
       });
       setScore(response.data);
@@ -112,7 +117,7 @@ export function useChat() {
           firebaseUid: auth?.currentUser?.uid,
           email: auth?.currentUser?.email,
           persona,
-          history: messages,
+          history: currentMessages,
           score: response.data
         });
       } catch (dbErr) {
@@ -125,7 +130,7 @@ export function useChat() {
     } finally {
       setEvaluating(false);
     }
-  }, [messages, setScore, setEvaluating, setStatus]);
+  }, [setScore, setEvaluating, setStatus]);
 
   /**
    * Stop TTS
