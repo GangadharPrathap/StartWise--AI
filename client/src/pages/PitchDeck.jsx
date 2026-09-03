@@ -32,13 +32,23 @@ export default function PitchDeck() {
     }
     setIsGenerating(true)
     try {
-      // Use /pitch-deck endpoint which supports AI generation with template fallback
+      // Send the full analysis result so the AI can generate data-driven slides
       const response = await apiClient.post('/pitch-deck', {
         idea: ideaText,
         slideCount: 8,
         theme: 'Startup',
         language: 'English',
-        type: 'investor'
+        type: 'investor',
+        // Pass analysis data so pitch deck uses real market insights
+        analysisResult: result ? {
+          marketSize: result.marketSize,
+          competitors: result.competitors,
+          opportunityScore: result.opportunityScore,
+          targetCustomer: result.targetCustomer,
+          revenueModel: result.revenueModel,
+          city: result.city,
+          marketAnalysisDetails: result.marketAnalysisDetails
+        } : null
       })
       // Handle both response formats: { slides: [...] } and { pitchSlides: [...] }
       const data = response.data || response
@@ -101,9 +111,9 @@ export default function PitchDeck() {
                       <p className="text-xs text-gray-500 leading-relaxed">{slide.speakerNotes}</p>
                     </div>
                   )}
-                  {slide.bullets && (
+                  {(slide.bullets || slide.bulletPoints) && (
                     <ul className="mt-4 space-y-2">
-                      {slide.bullets.map((b, j) => (
+                      {(slide.bullets || slide.bulletPoints).map((b, j) => (
                         <li key={j} className="flex items-start gap-2 text-xs text-gray-500">
                           <ChevronRight size={14} className="text-accent shrink-0 mt-0.5" />
                           {b}

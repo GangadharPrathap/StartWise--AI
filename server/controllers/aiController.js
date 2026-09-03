@@ -81,23 +81,55 @@ Analyze the given startup idea for the city of ${city} and return ONLY valid JSO
 });
 
 export const generatePresentation = catchAsync(async (req, res, next) => {
-  const { idea, slideCount, theme, language, type } = req.body;
+  const { idea, slideCount, theme, language, type, analysisResult } = req.body;
+
+  // Build context from analysis result if available
+  let analysisContext = '';
+  if (analysisResult) {
+    analysisContext = `
+ANALYSIS DATA (use these real numbers in the slides):
+- Market Size: ${analysisResult.marketSize || 'Not available'}
+- Opportunity Score: ${analysisResult.opportunityScore || 'N/A'}/10
+- Target Customer: ${analysisResult.targetCustomer || 'Not specified'}
+- Revenue Model: ${analysisResult.revenueModel || 'Not specified'}
+- Target City: ${analysisResult.city || 'India'}
+- Market Details: ${analysisResult.marketAnalysisDetails || ''}
+- Competitors: ${analysisResult.competitors?.map(c => `${c.name}: ${c.description}`).join('; ') || 'Not analyzed'}`;
+  }
 
   // Try AI-generated content first
   if (GEMINI_API_KEY && GEMINI_API_KEY !== "dummy" && GEMINI_API_KEY !== "your_gemini_api_key_here") {
     try {
-      const systemPrompt = `You are an expert startup pitch deck consultant.
-Generate a ${slideCount || 6}-slide pitch deck for the given startup idea.
-Theme: ${theme || 'Startup'}. Language: ${language || 'English'}. Type: ${type || 'investor'}.
+      const systemPrompt = `You are an expert startup pitch deck consultant who has helped founders raise $100M+ in funding.
+Generate a ${slideCount || 8}-slide investor pitch deck for the startup idea below.
+
+CRITICAL RULES:
+1. Every slide MUST be specific to this exact startup idea: "${idea}"
+2. Use real numbers from the analysis data provided (market size, competitors, etc.)
+3. Do NOT use placeholder text like "Your Company" or "XYZ". Use the actual startup concept.
+4. Slides should tell a compelling story: Problem → Solution → Market → Product → Business Model → Traction → Team → Ask
+5. Include specific Indian market context (Indian cities, INR amounts, Indian competitors)
+6. Each slide should have 3-4 bullet points with concrete, specific information
+7. Speaker notes should guide the founder on what to say and how to present each slide
+${analysisContext}
+
+Theme: ${theme || 'Startup'}. Language: ${language || 'English'}. Audience: ${type || 'investor'}.
+
 Return ONLY valid JSON (no extra text) with this structure:
 {
   "slides": [
-    {"slideNumber": number, "title": "string", "content": "string", "speakerNotes": "string"}
+    {
+      "slideNumber": number,
+      "title": "Slide title (specific to the idea)",
+      "content": "2-3 sentence main content with specific details about this startup",
+      "bullets": ["Specific bullet point 1", "Specific bullet point 2", "Specific bullet point 3"],
+      "speakerNotes": "What the founder should say when presenting this slide"
+    }
   ],
   "metadata": { "startupName": "string", "tagline": "string", "theme": "${theme || 'Startup'}" }
 }`;
 
-      const dataStr = await aiService.generateCompletion(systemPrompt, `Idea: ${idea}`);
+      const dataStr = await aiService.generateCompletion(systemPrompt, `STARTUP IDEA: ${idea}\n\nGenerate a pitch deck that tells the compelling story of this specific startup. Every slide must reference the actual idea, market, and data.`);
       const data = JSON.parse(dataStr);
       return sendSuccess(res, data, "AI Presentation generated successfully");
     } catch (error) {
@@ -105,8 +137,20 @@ Return ONLY valid JSON (no extra text) with this structure:
     }
   }
 
-  // Fallback to template-based generation
+  // Fallback to template-based generation (enhanced to be more idea-specific)
   const data = pitchDeckService.generatePresentationContent(idea, slideCount, theme, language, type);
+  
+  // Convert template format to the simpler slide format the frontend expects
+  if (data.slides) {
+    data.slides = data.slides.map(s => ({
+      slideNumber: s.slideNumber,
+      title: s.title,
+      content: s.content || s.subtitle || '',
+      bullets: s.bulletPoints || [],
+      speakerNotes: s.speakerNotes || ''
+    }));
+  }
+  
   sendSuccess(res, data, "Presentation generated successfully");
 });
 
